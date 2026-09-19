@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # szerkesztő-beállítások
 .vscode/
+
+# a deploy generálja, címeket tartalmaz
+public/mail-config.php

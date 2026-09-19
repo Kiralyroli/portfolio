@@ -8,6 +8,7 @@ ahol nincs Node futtatókörnyezet.
 
 ```bash
 npm install
+cp .env.example .env   # majd írd be a saját értékeidet
 npm run dev      # http://localhost:4321
 npm run build    # a kész oldal a dist/ mappába kerül
 npm run preview  # a buildelt oldal megtekintése
@@ -17,12 +18,13 @@ npm run preview  # a buildelt oldal megtekintése
 
 | Mit | Hol |
 |---|---|
-| Név, pozíció, bemutatkozás, skillek, linkek, e-mail | `src/data/site.ts` |
+| Név, pozíció, bemutatkozás, skillek, linkek | `src/data/site.ts` |
+| Az oldalon megjelenő e-mail-cím | `CONTACT_EMAIL` környezeti változó (helyben `.env`, deployban GitHub-változó) |
 | Felületi szövegek (gombok, űrlap, címkék) mindkét nyelven | `src/i18n/ui.ts` |
 | Projektek | `src/content/projects/*.md` — fájlonként egy projekt |
 | Színek, betűtípusok | `src/styles/global.css` (`@theme` blokk) |
 | Domain | `astro.config.mjs` → `site`, és `public/robots.txt` |
-| Kapcsolati űrlap címzettje | `public/mail.php` → `$to` |
+| Kapcsolati űrlap címzettje és feladója | GitHub: `MAIL_TO` titok és `CONTACT_EMAIL` változó — a deploy ebből generálja a `mail-config.php`-t |
 
 ### Új projekt felvétele
 
@@ -63,11 +65,26 @@ Ezeket még be kell tenned a `public/` mappába:
 **Kézzel:** `npm run build`, majd a `dist/` mappa **tartalmát** töltsd fel
 SFTP-vel a tárhely webgyökerébe (`/web` vagy `/public_html`).
 A `public/mail.php` automatikusan a `dist/` gyökerébe kerül, a szerver PHP-ja futtatja.
+Kézi feltöltésnél mellé egy `mail-config.php` is kell:
 
-**Automatikusan:** a `.github/workflows/deploy.yml` minden `main`-re pushnál
-buildel és feltölt. Ehhez a GitHub repóban be kell állítani a titkokat
-(`SFTP_HOST`, `SFTP_USER`, `SFTP_PASSWORD`, `SFTP_PATH`) — a fájl tetején
-le van írva.
+```php
+<?php
+return ['to' => 'ide-erkeznek@pelda.hu', 'from' => 'letezo-cim@domain.hu'];
+```
+
+**GitHub Actions-szel:** a `.github/workflows/deploy.yml` buildel, legenerálja a
+`mail-config.php`-t, és feltölt. A repóban ezeket kell beállítani
+(*Settings → Secrets and variables → Actions*):
+
+| Típus | Név | Mi ez |
+|---|---|---|
+| Secret | `SFTP_HOST`, `SFTP_USER`, `SFTP_PASSWORD` | SFTP-belépés |
+| Secret | `MAIL_TO` | ide érkeznek az űrlap üzenetei |
+| Variable | `SFTP_PATH` | a célmappa, pl. `/` |
+| Variable | `CONTACT_EMAIL` | az oldalon megjelenő cím és az űrlap feladója |
+
+A nethelynél a feladónak (`CONTACT_EMAIL`) a tárhelyen létező e-mail-címnek
+vagy aliasnak kell lennie, különben a szerver eldobja a levelet.
 
 HTTPS-t a nethely admin felületén, ingyenes Let's Encrypt tanúsítvánnyal kapcsolj be.
 

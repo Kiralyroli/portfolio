@@ -3,11 +3,14 @@
  * Ezt a fájlt kell átírnod — a komponensekhez nem kell hozzányúlni.
  */
 
+import { CONTACT_EMAIL } from 'astro:env/server';
+
 export const site = {
   // --- alapadatok -------------------------------------------------
   name: 'Király Roland',
   initials: 'KR',
-  email: 'kiralyroli96@gmail.com',
+  // A CONTACT_EMAIL környezeti változóból (lásd .env.example)
+  email: CONTACT_EMAIL,
   location: { hu: 'Szeged', en: 'Szeged, Hungary' },
 
   role: {

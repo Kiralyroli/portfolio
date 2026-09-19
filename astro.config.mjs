@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 import sitemap from '@astrojs/sitemap';
@@ -15,6 +15,14 @@ export default defineConfig({
     routing: {
       // A magyar a gyökéren él (/), az angol az /en/ alatt
       prefixDefaultLocale: false,
+    },
+  },
+
+  // Környezeti változók. Kötelezők: ha hiányoznak, a build hibával leáll.
+  // Helyben a .env fájlból jönnek (minta: .env.example), a deployban a GitHub-változókból.
+  env: {
+    schema: {
+      CONTACT_EMAIL: envField.string({ context: 'server', access: 'public' }),
     },
   },
 

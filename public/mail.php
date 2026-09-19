@@ -3,13 +3,19 @@
  * Kapcsolatfelvételi űrlap — nethely.hu (PHP 8).
  * A statikus oldal mellé kerül, a szerver futtatja.
  *
- * Beállítás: írd át a $to címet a sajátodra.
+ * A címeket a mellette lévő mail-config.php adja, amit a deploy generál a
+ * GitHub-beállításokból (lásd .github/workflows/deploy.yml):
+ *  - to:   ide érkeznek az üzenetek         (MAIL_TO titok)
+ *  - from: a feladó                         (CONTACT_EMAIL változó)
+ *
+ * A nethelynél a feladónak a tárhelyen LÉTEZŐ e-mail-címnek vagy aliasnak kell
+ * lennie, különben az SMTP-szerver eldobja a levelet.
+ * https://www.nethely.hu/tudasbazis/php-mail
  */
 
 declare(strict_types=1);
 
-$to      = 'kiralyroli96@gmail.com';          // <-- ide érkeznek az üzenetek
-$subject = 'Uj uzenet a portfolio oldalrol';
+$subject = 'Új üzenet a portfólió oldalról';
 
 /** JSON vagy sima válasz, attól függően, hogy fetch hívta-e. */
 function respond(int $status, string $message): never
@@ -32,6 +38,15 @@ function respond(int $status, string $message): never
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     respond(405, 'Hibas keres.');
+}
+
+$config = is_file(__DIR__ . '/mail-config.php') ? require __DIR__ . '/mail-config.php' : null;
+$to     = is_array($config) ? (string) ($config['to'] ?? '') : '';
+$from   = is_array($config) ? (string) ($config['from'] ?? '') : '';
+
+if (!filter_var($to, FILTER_VALIDATE_EMAIL) || !filter_var($from, FILTER_VALIDATE_EMAIL)) {
+    error_log('mail.php: hianyzo vagy hibas mail-config.php');
+    respond(500, 'A levelkuldes nincs beallitva.');
 }
 
 // Spamcsapda: ha kitöltötték, csendben "sikeres" választ adunk
@@ -64,13 +79,21 @@ $body = "Nev: {$safeName}\n"
       . $message;
 
 $headers = [
-    'From: Portfolio <no-reply@' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '>',
+    'From: ' . mb_encode_mimeheader('Portfólió', 'UTF-8') . " <{$from}>",
+    // A "Válasz" gomb a látogatónak címez, nem a feladó címnek
     'Reply-To: ' . $safeEmail,
     'Content-Type: text/plain; charset=utf-8',
     'MIME-Version: 1.0',
 ];
 
-$sent = mail($to, $subject, $body, implode("\r\n", $headers));
+// Az "-f" a boríték-feladót is a létező címre állítja (a nethely ezt is elfogadja)
+$sent = mail(
+    $to,
+    mb_encode_mimeheader($subject, 'UTF-8'),
+    $body,
+    implode("\r\n", $headers),
+    '-f' . $from
+);
 
 if (!$sent) {
     respond(500, $lang === 'en' ? 'Could not send. Please email me directly.' : 'Nem sikerult elkuldeni. Irj inkabb kozvetlenul e-mailben.');
