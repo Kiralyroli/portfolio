@@ -4,7 +4,9 @@
 #   SFTP_HOST      ftp.nethely.hu
 #   SFTP_USER      a tárhely FTP-felhasználóneve
 #   SFTP_PASSWORD  a hozzá tartozó jelszó
-#   SFTP_PATH      a célmappa, pl. / vagy /web
+#
+# A célmappát (pl. / vagy /web) változóként add meg, ne titokként:
+# Settings → Secrets and variables → Actions → Variables fül → SFTP_PATH
 #
 # Egyelőre kézzel indul: Actions fül → Deploy → Run workflow.
 # Ha a titkok be vannak állítva és a deploy működik, vedd ki a # jeleket
@@ -21,9 +23,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -38,5 +40,8 @@ jobs:
           username: ${{ secrets.SFTP_USER }}
           password: ${{ secrets.SFTP_PASSWORD }}
           local_path: './dist/*'
-          remote_path: ${{ secrets.SFTP_PATH }}
+          # A célmappa nem titok: ha változóként (vars) van megadva, a napló olvasható marad
+          remote_path: ${{ vars.SFTP_PATH || secrets.SFTP_PATH }}
           delete_remote_files: false
+          # A nethely csak SFTP-t enged, SSH-parancsot nem (a célmappának léteznie kell)
+          sftp_only: true
