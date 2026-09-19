@@ -33,15 +33,22 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      # A nethely csak SFTP-t enged (SSH-parancsot nem), ezért lftp tükrözi fel a dist/ mappát:
+      # az almappákat is létrehozza, a tárhelyen lévő egyéb fájlokat nem törli.
       - name: Feltöltés SFTP-vel
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          server: ${{ secrets.SFTP_HOST }}
-          username: ${{ secrets.SFTP_USER }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          local_path: './dist/*'
+        env:
+          LFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_USER: ${{ secrets.SFTP_USER }}
           # A célmappa nem titok: ha változóként (vars) van megadva, a napló olvasható marad
-          remote_path: ${{ vars.SFTP_PATH || secrets.SFTP_PATH }}
-          delete_remote_files: false
-          # A nethely csak SFTP-t enged, SSH-parancsot nem (a célmappának léteznie kell)
-          sftp_only: true
+          SFTP_PATH: ${{ vars.SFTP_PATH || secrets.SFTP_PATH }}
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq lftp
+          lftp --env-password -u "$SFTP_USER" "sftp://$SFTP_HOST" -e "
+            set sftp:auto-confirm yes;
+            set net:timeout 20;
+            set net:max-retries 2;
+            mirror --reverse --verbose --parallel=4 dist/ '$SFTP_PATH';
+            quit
+          "
