@@ -1,0 +1,64 @@
+---
+import type { Lang } from '../data/site';
+import { useTranslations } from '../i18n/ui';
+import ImageCarousel from './ImageCarousel.astro';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  summary: string;
+  year: number;
+  tech: string[];
+  repo?: string;
+  demo?: string;
+  images: string[];
+}
+
+const { lang, title, summary, year, tech, repo, demo, images } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<article class="flex flex-col border border-line bg-surface/85 transition-colors hover:border-line2">
+  {images.length > 0 ? (
+    <ImageCarousel lang={lang} title={title} images={images} />
+  ) : (
+    <div
+      class="flex aspect-video w-full items-center justify-center border-b border-line
+             bg-[linear-gradient(135deg,#162026,#0F161A)] font-mono text-[0.6rem]
+             tracking-[0.16em] text-line2 uppercase"
+      aria-hidden="true"
+    >
+      {title}
+    </div>
+  )}
+
+  <div class="flex flex-1 flex-col gap-2.5 p-4">
+    <div class="flex items-baseline justify-between gap-3">
+      <h3 class="text-[0.95rem] font-medium tracking-[-0.01em]">{title}</h3>
+      <span class="font-mono text-[0.62rem] text-fa tabular-nums">{year}</span>
+    </div>
+
+    <p class="text-[0.78rem] leading-relaxed font-light text-mu">{summary}</p>
+
+    <ul class="mt-auto flex flex-wrap gap-1.5 pt-1">
+      {tech.map((item) => (
+        <li class="border border-line2 px-1.5 py-0.5 font-mono text-[0.6rem] text-mu">{item}</li>
+      ))}
+    </ul>
+
+    {(repo || demo) && (
+      <div class="flex flex-wrap gap-4 pt-1 text-[0.72rem]">
+        {repo && (
+          <a href={repo} target="_blank" rel="noopener" class="text-accent transition-colors hover:text-tx">
+            {t('cta.repo')} ↗
+          </a>
+        )}
+        {demo && (
+          <a href={demo} target="_blank" rel="noopener" class="text-accent transition-colors hover:text-tx">
+            {t('cta.demo')} ↗
+          </a>
+        )}
+      </div>
+    )}
+  </div>
+</article>

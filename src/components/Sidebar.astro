@@ -1,0 +1,89 @@
+---
+import { site, type Lang } from '../data/site';
+import { useTranslations, localePath } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const nav = [
+  { id: 'bemutatkozas', key: 'nav.about' as const },
+  { id: 'szakterulet', key: 'nav.skills' as const },
+  { id: 'munkak', key: 'nav.work' as const },
+  { id: 'kapcsolat', key: 'nav.contact' as const },
+];
+
+const other: Lang = lang === 'hu' ? 'en' : 'hu';
+---
+
+<aside
+  class="flex flex-col gap-6 border-b border-line bg-side px-6 py-8
+         lg:sticky lg:top-0 lg:h-screen lg:border-r lg:border-b-0 lg:py-9"
+>
+  <div>
+    <h1 class="text-[1.65rem] leading-[1.1] font-medium tracking-[-0.03em]">
+      {site.name.split(' ').map((word) => <span class="block">{word}</span>)}
+    </h1>
+    <p class="mt-2 font-mono text-[0.66rem] tracking-[0.1em] text-accent uppercase">
+      {site.role[lang]}
+    </p>
+  </div>
+
+  <p class="max-w-[34ch] text-[0.8rem] leading-relaxed font-light text-mu">
+    {site.tagline[lang]}
+  </p>
+
+  <nav aria-label={t('nav.about')}>
+    <ul class="flex flex-col gap-2.5">
+      {nav.map(({ id, key }) => (
+        <li>
+          <a
+            href={`#${id}`}
+            data-nav={id}
+            class="group flex items-center gap-2.5 text-[0.8rem] text-fa transition-colors hover:text-mu
+                   aria-[current=true]:text-tx"
+          >
+            <span
+              class="block h-px w-3.5 bg-line2 transition-all group-aria-[current=true]:w-6 group-aria-[current=true]:bg-accent"
+            ></span>
+            {t(key)}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <div class="mt-auto flex flex-wrap items-center gap-4 pt-5 text-[0.72rem] text-fa">
+    <a href={site.links.github} rel="me noopener" target="_blank" class="transition-colors hover:text-tx">GitHub</a>
+    <a href={site.links.linkedin} rel="me noopener" target="_blank" class="transition-colors hover:text-tx">LinkedIn</a>
+    <a href={localePath('/', other)} class="transition-colors hover:text-tx" hreflang={other}>
+      {other.toUpperCase()}
+    </a>
+  </div>
+</aside>
+
+<script>
+  // Aktív szekció jelölése az oldalsáv navigációjában
+  const links = document.querySelectorAll<HTMLAnchorElement>('a[data-nav]');
+  const sections = [...links]
+    .map((link) => document.getElementById(link.dataset.nav!))
+    .filter((el): el is HTMLElement => el !== null);
+
+  const setActive = (id: string) => {
+    links.forEach((link) => link.setAttribute('aria-current', String(link.dataset.nav === id)));
+  };
+
+  if (sections.length > 0) {
+    setActive(sections[0].id);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (visible) setActive(visible.target.id);
+      },
+      { rootMargin: '-20% 0px -65% 0px', threshold: 0 },
+    );
+    sections.forEach((section) => observer.observe(section));
+  }
+</script>

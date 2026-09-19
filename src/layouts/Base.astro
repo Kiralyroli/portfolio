@@ -1,0 +1,56 @@
+---
+import '../styles/global.css';
+import { site, type Lang } from '../data/site';
+import { useTranslations, localePath } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  /** Az oldal címe; ha nincs, a név + pozíció lesz. */
+  title?: string;
+  description?: string;
+}
+
+const { lang, title, description } = Astro.props;
+const t = useTranslations(lang);
+
+const pageTitle = title ?? `${site.name} — ${site.role[lang]}`;
+const pageDesc = description ?? t('meta.description');
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+---
+
+<!doctype html>
+<html lang={lang} class="scroll-pt-6">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDesc} />
+    <link rel="canonical" href={canonical.href} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#090E11" />
+
+    <!-- Nyelvi változatok -->
+    <link rel="alternate" hreflang="hu" href={new URL(localePath('/', 'hu'), canonical).href} />
+    <link rel="alternate" hreflang="en" href={new URL(localePath('/', 'en'), canonical).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', canonical).href} />
+
+    <!-- Közösségi megosztás -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDesc} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:locale" content={lang === 'hu' ? 'hu_HU' : 'en_US'} />
+    <meta property="og:image" content={new URL('/og.png', canonical).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+
+  <body class="bg-ground text-tx">
+    <a
+      href="#tartalom"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-on-accent"
+    >
+      {t('skip')}
+    </a>
+    <slot />
+  </body>
+</html>

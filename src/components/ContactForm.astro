@@ -1,0 +1,110 @@
+---
+import { site, type Lang } from '../data/site';
+import { useTranslations } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div class="flex flex-col gap-5">
+  <div>
+    <p class="text-lg font-medium tracking-[-0.025em]">{t('contact.heading')}</p>
+    <a
+      href={`mailto:${site.email}`}
+      class="mt-3 inline-block border-b border-accent text-[0.95rem] text-accent transition-colors hover:text-tx"
+    >
+      {site.email}
+    </a>
+  </div>
+
+  <form
+    id="contact-form"
+    method="post"
+    action="/mail.php"
+    class="flex flex-col gap-3 border border-line bg-surface/85 p-4"
+  >
+    <input type="hidden" name="lang" value={lang} />
+    <!-- Spamcsapda: valódi látogató nem tölti ki -->
+    <p class="hidden" aria-hidden="true">
+      <label>Ne töltsd ki<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    </p>
+
+    <div class="grid gap-3 sm:grid-cols-2">
+      <label class="flex flex-col gap-1.5">
+        <span class="label">{t('contact.form.name')}</span>
+        <input
+          type="text" name="name" required autocomplete="name"
+          class="border border-line2 bg-ground px-3 py-2 text-[0.82rem] text-tx placeholder:text-fa focus:border-accent focus:outline-none"
+        />
+      </label>
+      <label class="flex flex-col gap-1.5">
+        <span class="label">{t('contact.form.email')}</span>
+        <input
+          type="email" name="email" required autocomplete="email"
+          class="border border-line2 bg-ground px-3 py-2 text-[0.82rem] text-tx placeholder:text-fa focus:border-accent focus:outline-none"
+        />
+      </label>
+    </div>
+
+    <label class="flex flex-col gap-1.5">
+      <span class="label">{t('contact.form.message')}</span>
+      <textarea
+        name="message" required rows="4"
+        class="resize-y border border-line2 bg-ground px-3 py-2 text-[0.82rem] text-tx placeholder:text-fa focus:border-accent focus:outline-none"
+      ></textarea>
+    </label>
+
+    <div class="flex flex-wrap items-center gap-3">
+      <button
+        type="submit"
+        class="bg-accent px-4 py-2 text-[0.75rem] font-semibold text-on-accent transition-opacity hover:opacity-90 disabled:opacity-60"
+        data-send={t('contact.form.send')}
+        data-sending={t('contact.form.sending')}
+      >
+        {t('contact.form.send')}
+      </button>
+      <p
+        id="contact-status"
+        role="status"
+        class="text-[0.75rem] text-mu empty:hidden"
+        data-ok={t('contact.form.ok')}
+        data-error={t('contact.form.error')}
+      ></p>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Küldés oldalfrissítés nélkül. JS nélkül is működik: a form simán elküldi magát.
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const status = document.getElementById('contact-status');
+  const button = form?.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+
+  form?.addEventListener('submit', async (event) => {
+    if (!status || !button) return;
+    event.preventDefault();
+
+    button.disabled = true;
+    button.textContent = button.dataset.sending!;
+    status.textContent = '';
+    status.classList.remove('text-accent');
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+      if (!response.ok) throw new Error(String(response.status));
+      status.textContent = status.dataset.ok!;
+      status.classList.add('text-accent');
+      form.reset();
+    } catch {
+      status.textContent = status.dataset.error!;
+    } finally {
+      button.disabled = false;
+      button.textContent = button.dataset.send!;
+    }
+  });
+</script>

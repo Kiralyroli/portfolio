@@ -1,0 +1,42 @@
+# Build + feltöltés a nethely.hu tárhelyre SFTP-vel.
+#
+# Egyszeri beállítás a GitHub repónál (Settings → Secrets and variables → Actions):
+#   SFTP_HOST      ftp.nethely.hu
+#   SFTP_USER      a tárhely FTP-felhasználóneve
+#   SFTP_PASSWORD  a hozzá tartozó jelszó
+#   SFTP_PATH      a célmappa, pl. / vagy /web
+#
+# Egyelőre kézzel indul: Actions fül → Deploy → Run workflow.
+# Ha a titkok be vannak állítva és a deploy működik, vedd ki a # jeleket
+# a push elől, és onnantól minden main ágra push automatikusan élesít.
+
+name: Deploy
+
+on:
+  # push:
+  #   branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Feltöltés SFTP-vel
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          server: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USER }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          local_path: './dist/*'
+          remote_path: ${{ secrets.SFTP_PATH }}
+          delete_remote_files: false

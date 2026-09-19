@@ -1,0 +1,23 @@
+---
+import { site, type Lang } from '../data/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+type Item = string | { readonly hu: string; readonly en: string };
+const text = (item: Item) => (typeof item === 'string' ? item : item[lang]);
+---
+
+<dl class="grid gap-x-6 gap-y-4 sm:grid-cols-2">
+  {site.skills.map((group) => {
+    const learning = 'learning' in group && group.learning;
+    return (
+      <div class:list={['border-l pl-3', learning ? 'border-dashed border-line2' : 'border-line2']}>
+        <dt class:list={['label', learning ? '!text-mu' : '!text-accent']}>{group.label[lang]}</dt>
+        <dd class:list={['mt-1 text-[0.8rem] leading-relaxed font-light', learning ? 'text-fa' : 'text-mu']}>
+          {group.items.map(text).join(', ')}
+        </dd>
+      </div>
+    );
+  })}
+</dl>

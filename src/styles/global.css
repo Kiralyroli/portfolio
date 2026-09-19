@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+/* Saját betűtípusok (nincs külső Google Fonts kérés) */
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+/* ---------------------------------------------------------------
+   Design tokenek — "Rácsos, színezett alap" irány
+   --------------------------------------------------------------- */
+@theme {
+  --color-ground: #090E11;   /* oldal háttér */
+  --color-side:   #0C1216;   /* oldalsáv háttér */
+  --color-surface:#0E1418;   /* kártyák */
+  --color-line:   #182126;   /* hajszálvonal */
+  --color-line2:  #25313A;   /* erősebb vonal */
+  --color-grid:   #121A1F;   /* háttérrács vonalai */
+  --color-tx:     #E6EDEF;   /* elsődleges szöveg */
+  --color-mu:     #8FA0A6;   /* másodlagos szöveg */
+  --color-fa:     #5F6F76;   /* halvány / címke */
+  --color-accent: #E4C98F;   /* akcens (homok) */
+  --color-on-accent: #15120A;
+
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--color-ground);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      transition-duration: .01ms !important;
+    }
+  }
+  body {
+    background-color: var(--color-ground);
+    color: var(--color-tx);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--color-accent); color: var(--color-on-accent); }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+@utility grid-lines {
+  /* Hat egyenlő oszlopot rajzol a tartalom mögé */
+  background-image: linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: calc(100% / 6) 100%;
+}
+
+@utility label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-fa);
+}

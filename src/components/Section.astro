@@ -1,0 +1,16 @@
+---
+interface Props { id: string; label: string }
+const { id, label } = Astro.props;
+---
+
+<section id={id} class="flex scroll-mt-6 flex-col gap-3.5">
+  <h2 class="flex items-center gap-2.5 pb-1.5">
+    <span class="block size-[5px] shrink-0 bg-accent" aria-hidden="true"></span>
+    <span class="label">{label}</span>
+    <span
+      class="h-px flex-1 [background:repeating-linear-gradient(90deg,var(--color-line2)_0_5px,transparent_5px_10px)]"
+      aria-hidden="true"
+    ></span>
+  </h2>
+  <slot />
+</section>
