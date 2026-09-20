@@ -32,5 +32,14 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      // A sitemapban is szerepeljen, hogy a két nyelv ugyanannak az oldalnak a változata
+      i18n: {
+        defaultLocale: 'hu',
+        locales: { hu: 'hu-HU', en: 'en-US' },
+      },
+      serialize: (item) => ({ ...item, lastmod: new Date().toISOString() }),
+    }),
+  ],
 });

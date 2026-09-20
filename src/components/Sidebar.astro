@@ -21,19 +21,23 @@ const other: Lang = lang === 'hu' ? 'en' : 'hu';
          lg:sticky lg:top-0 lg:h-screen lg:border-r lg:border-b-0 lg:py-9"
 >
   <div>
-    <h1 class="text-[1.95rem] leading-[1.08] font-medium tracking-[-0.03em]">
-      {site.name.split(' ').map((word) => <span class="block">{word}</span>)}
+    <!-- Egy h1 az oldalon: a név és a pozíció is benne van, így a kereső is látja.
+         A szóköz a szavak után kell, különben "KirályRoland"-ként olvassák. -->
+    <h1>
+      <span class="block text-[1.95rem] leading-[1.08] font-medium tracking-[-0.03em]">
+        {site.name.split(' ').map((word) => <span class="block">{word}{' '}</span>)}
+      </span>
+      <span class="mt-2.5 block font-mono text-[0.76rem] tracking-[0.06em] text-accent uppercase">
+        {site.role[lang]}
+      </span>
     </h1>
-    <p class="mt-2.5 font-mono text-[0.76rem] tracking-[0.06em] text-accent uppercase">
-      {site.role[lang]}
-    </p>
   </div>
 
   <p class="max-w-[34ch] text-[0.8rem] leading-relaxed font-light text-mu">
     {site.tagline[lang]}
   </p>
 
-  <nav aria-label={t('nav.about')}>
+  <nav aria-label={t('nav.label')}>
     <ul class="flex flex-col gap-2.5">
       {nav.map(({ id, key }) => (
         <li>

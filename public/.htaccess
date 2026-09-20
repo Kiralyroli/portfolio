@@ -1,0 +1,23 @@
+# Apache-beállítások a nethely tárhelyhez.
+# Minden szabály IfModule-ban van, így nem okoz hibát, ha a modul hiányzik.
+
+# Saját 404-es oldal a szerver alapértelmezettje helyett
+ErrorDocument 404 /404.html
+
+# A hash-elt fájlnevű CSS/JS/betűtípus sosem változik ugyanazon a néven,
+# ezért hosszan gyorsítótárazható. A HTML mindig friss legyen.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault                        "access plus 1 month"
+  ExpiresByType text/html               "access plus 0 seconds"
+  ExpiresByType image/webp              "access plus 1 year"
+  ExpiresByType image/png               "access plus 1 year"
+  ExpiresByType image/svg+xml           "access plus 1 year"
+  ExpiresByType font/woff2              "access plus 1 year"
+  ExpiresByType text/css                "access plus 1 year"
+  ExpiresByType application/javascript  "access plus 1 year"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>

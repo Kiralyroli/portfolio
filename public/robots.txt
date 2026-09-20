@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
+# Szerveroldali fájlok: nincs bennük indexelhető tartalom
+Disallow: /mail.php
+Disallow: /mail-config.php
+
 Sitemap: https://kiroland.hu/sitemap-index.xml

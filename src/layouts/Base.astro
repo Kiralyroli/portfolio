@@ -5,17 +5,50 @@ import { useTranslations, localePath } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
-  /** Az oldal címe; ha nincs, a név + pozíció lesz. */
+  /** Az oldal címe; ha nincs, a nyelvhez tartozó alapértelmezett. */
   title?: string;
   description?: string;
+  /** Keresőből kizárt oldal (pl. 404) */
+  noindex?: boolean;
 }
 
-const { lang, title, description } = Astro.props;
+const { lang, title, description, noindex = false } = Astro.props;
 const t = useTranslations(lang);
 
-const pageTitle = title ?? `${site.name} — ${site.role[lang]}`;
+const pageTitle = title ?? t('meta.title');
 const pageDesc = description ?? t('meta.description');
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+const ogImage = new URL('/og.png', canonical).href;
+
+// Strukturált adat: így a kereső tudja, hogy ez egy személy bemutatkozó oldala
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  jobTitle: site.role[lang],
+  description: site.about[lang][0],
+  url: canonical.href,
+  image: ogImage,
+  email: `mailto:${site.email}`,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: site.location[lang],
+    addressCountry: 'HU',
+  },
+  sameAs: [site.links.github, site.links.linkedin],
+  knowsAbout: site.skills.flatMap((group) =>
+    group.items.map((item) => (typeof item === 'string' ? item : item[lang])),
+  ),
+};
+
+const siteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: `${site.name} — ${site.role[lang]}`,
+  url: new URL('/', canonical).href,
+  inLanguage: lang === 'hu' ? 'hu-HU' : 'en-US',
+  author: { '@type': 'Person', name: site.name },
+};
 ---
 
 <!doctype html>
@@ -27,21 +60,44 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
     <meta name="description" content={pageDesc} />
     <link rel="canonical" href={canonical.href} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
     <meta name="theme-color" content="#090E11" />
+    <meta name="author" content={site.name} />
+    <meta
+      name="robots"
+      content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1'}
+    />
 
     <!-- Nyelvi változatok -->
     <link rel="alternate" hreflang="hu" href={new URL(localePath('/', 'hu'), canonical).href} />
     <link rel="alternate" hreflang="en" href={new URL(localePath('/', 'en'), canonical).href} />
     <link rel="alternate" hreflang="x-default" href={new URL('/', canonical).href} />
 
-    <!-- Közösségi megosztás -->
-    <meta property="og:type" content="website" />
+    <!-- Közösségi megosztás (Facebook, LinkedIn, Messenger, Discord, Slack) -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDesc} />
     <meta property="og:url" content={canonical.href} />
     <meta property="og:locale" content={lang === 'hu' ? 'hu_HU' : 'en_US'} />
-    <meta property="og:image" content={new URL('/og.png', canonical).href} />
+    <meta property="og:locale:alternate" content={lang === 'hu' ? 'en_US' : 'hu_HU'} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t('meta.ogAlt')} />
+    <meta property="profile:first_name" content={site.name.split(' ')[1]} />
+    <meta property="profile:last_name" content={site.name.split(' ')[0]} />
+
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDesc} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={t('meta.ogAlt')} />
+
+    <!-- Strukturált adat a keresőknek -->
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} is:inline />
+    <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} is:inline />
   </head>
 
   <body class="bg-ground text-tx">

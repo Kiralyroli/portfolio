@@ -57,8 +57,20 @@ A képek ideális mérete 1280×720 (16:9).
 Ezeket még be kell tenned a `public/` mappába:
 
 - `cv-kiraly-roland-hu.pdf` és `cv-kiraly-roland-en.pdf` — önéletrajzok
-- `og.png` — 1200×630-as kép a közösségi megosztáshoz
-- `images/projects/*.png` — projekt képernyőképek
+
+## SEO
+
+- **Címek és leírások** nyelvenként az `src/i18n/ui.ts`-ben (`meta.title`,
+  `meta.description`). A cím 60, a leírás 160 karakter alatt maradjon.
+- **Strukturált adat** (JSON-LD `Person` és `WebSite`) a `src/layouts/Base.astro`-ban
+  készül a `site.ts` adataiból — nem kell külön karbantartani.
+- **Megosztási kép:** `public/og.png`. Ha a név vagy a pozíció változik, újragenerálható:
+  ```bash
+  node scripts/generate-og.mjs
+  ```
+- **Sitemap** buildkor készül, a két nyelvet `hreflang` kapcsolatokkal összekötve.
+- **`public/.htaccess`**: saját 404-es oldal és hosszú gyorsítótár a hash-elt fájlokra.
+- `meta keywords` szándékosan nincs: a Google évek óta figyelmen kívül hagyja.
 
 ## Élesítés a nethely.hu-ra
 

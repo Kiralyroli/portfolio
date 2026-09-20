@@ -51,7 +51,11 @@ const count = images.length;
         >
           <img
             src={src}
-            alt={count > 1 ? `${title} — ${i + 1}. ${t('gallery.image')}` : title}
+            alt={
+              count > 1
+                ? `${title} — ${t('gallery.screenshot')} ${i + 1}/${count}`
+                : `${title} — ${t('gallery.screenshot')}`
+            }
             loading={i === 0 ? 'eager' : 'lazy'}
             decoding="async"
             class="size-full object-contain"
