@@ -90,8 +90,9 @@ const projects = (await getCollection('projects', ({ data }) => data.featured)).
         <ContactForm lang={lang} />
       </Section>
 
-      <footer class="mt-auto flex flex-wrap justify-between gap-3 border-t border-line pt-5 text-[0.7rem] text-fa">
+      <footer class="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5 text-[0.7rem] text-fa">
         <span>© {new Date().getFullYear()} {site.name}</span>
+        <a href={t('privacy.path')} class="transition-colors hover:text-accent">{t('privacy.title')}</a>
         <span>{site.location[lang]}</span>
       </footer>
     </main>

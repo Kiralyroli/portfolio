@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import { type Lang } from '../data/site';
+import { useTranslations } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  /** Hatálybalépés / utolsó módosítás */
+  updated: string;
+  alternates: { hu: string; en: string };
+}
+
+const { lang, title, updated, alternates } = Astro.props;
+const t = useTranslations(lang);
+const home = lang === 'hu' ? '/' : '/en/';
+---
+
+<Base lang={lang} title={`${title} — ${t('meta.title')}`} alternates={alternates}>
+  <main id="tartalom" class="grid-lines min-h-screen px-6 py-12 lg:px-12 lg:py-16">
+    <div class="mx-auto flex max-w-[72ch] flex-col gap-8">
+      <div class="flex flex-col gap-3">
+        <a
+          href={home}
+          class="font-mono text-[0.7rem] tracking-[0.14em] text-fa uppercase transition-colors hover:text-accent"
+        >
+          ← {t('nav.home')}
+        </a>
+        <h1 class="flex items-center gap-3 pt-2">
+          <span class="block size-2 shrink-0 bg-accent" aria-hidden="true"></span>
+          <span class="font-mono text-[0.95rem] font-medium tracking-[0.18em] text-tx uppercase">{title}</span>
+        </h1>
+        <p class="font-mono text-[0.7rem] text-fa">{updated}</p>
+      </div>
+
+      <div class="legal flex flex-col gap-5 text-[0.86rem] leading-relaxed font-light text-mu">
+        <slot />
+      </div>
+    </div>
+  </main>
+</Base>
+
+<style is:global>
+  .legal h2 {
+    margin-top: 1.25rem;
+    color: var(--color-tx);
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .legal strong {
+    color: var(--color-tx);
+    font-weight: 500;
+  }
+  .legal a {
+    color: var(--color-accent);
+    border-bottom: 1px solid var(--color-line2);
+    transition: border-color 0.18s ease;
+  }
+  .legal a:hover {
+    border-color: var(--color-accent);
+  }
+  .legal ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding-left: 1.1rem;
+    list-style: disc;
+  }
+  .legal ul::marker,
+  .legal li::marker {
+    color: var(--color-fa);
+  }
+  .legal dl {
+    display: grid;
+    gap: 0.35rem 1.25rem;
+    border-left: 1px solid var(--color-line2);
+    padding-left: 0.9rem;
+  }
+  @media (min-width: 640px) {
+    .legal dl {
+      grid-template-columns: 11rem 1fr;
+    }
+  }
+  .legal dt {
+    color: var(--color-tx);
+  }
+  .legal dd {
+    margin: 0;
+  }
+</style>

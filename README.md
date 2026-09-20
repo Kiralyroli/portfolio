@@ -74,6 +74,16 @@ Ezeket még be kell tenned a `public/` mappába:
 - **`public/.htaccess`**: saját 404-es oldal és hosszú gyorsítótár a hash-elt fájlokra.
 - `meta keywords` szándékosan nincs: a Google évek óta figyelmen kívül hagyja.
 
+## Jogi oldalak
+
+- **Adatkezelési tájékoztató:** `src/pages/adatkezeles.astro` (HU) és
+  `src/pages/en/privacy.astro` (EN). Link a láblécben és a kapcsolati űrlap alatt.
+- Az űrlap **kötelező jelölőnégyzettel** kéri a hozzájárulást; a `mail.php` szerveroldalon is
+  ellenőrzi.
+- Az oldal saját sütit nem használ, ezért süti sáv nincs. ÁSZF sem kell, mert nincs értékesítés.
+- Ha változik az adatkezelés (pl. analitika kerül az oldalra), a tájékoztatót és a
+  "Hatályos" dátumot frissíteni kell.
+
 ## Élesítés a nethely.hu-ra
 
 **Kézzel:** `npm run build`, majd a `dist/` mappa **tartalmát** töltsd fel

@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import { site, type Lang } from '../data/site';
-import { useTranslations, localePath } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -10,9 +10,17 @@ interface Props {
   description?: string;
   /** Keresőből kizárt oldal (pl. 404) */
   noindex?: boolean;
+  /** A másik nyelvű változat útvonalai (hreflang) */
+  alternates?: { hu: string; en: string };
 }
 
-const { lang, title, description, noindex = false } = Astro.props;
+const {
+  lang,
+  title,
+  description,
+  noindex = false,
+  alternates = { hu: '/', en: '/en/' },
+} = Astro.props;
 const t = useTranslations(lang);
 
 const pageTitle = title ?? t('meta.title');
@@ -69,9 +77,9 @@ const siteSchema = {
     />
 
     <!-- Nyelvi változatok -->
-    <link rel="alternate" hreflang="hu" href={new URL(localePath('/', 'hu'), canonical).href} />
-    <link rel="alternate" hreflang="en" href={new URL(localePath('/', 'en'), canonical).href} />
-    <link rel="alternate" hreflang="x-default" href={new URL('/', canonical).href} />
+    <link rel="alternate" hreflang="hu" href={new URL(alternates.hu, canonical).href} />
+    <link rel="alternate" hreflang="en" href={new URL(alternates.en, canonical).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL(alternates.hu, canonical).href} />
 
     <!-- Közösségi megosztás (Facebook, LinkedIn, Messenger, Discord, Slack) -->
     <meta property="og:type" content="profile" />

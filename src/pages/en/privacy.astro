@@ -1,0 +1,112 @@
+---
+import LegalLayout from '../../components/LegalLayout.astro';
+import { site } from '../../data/site';
+
+const alternates = { hu: '/adatkezeles/', en: '/en/privacy/' };
+---
+
+<LegalLayout
+  lang="en"
+  title="Privacy notice"
+  updated="Effective: 20 September 2026"
+  alternates={alternates}
+>
+  <p>
+    This notice explains what personal data <strong>kiroland.hu</strong> processes, for what purpose,
+    and what rights you have. The site is a personal portfolio: it sells nothing, requires no
+    registration, and does not profile its visitors.
+  </p>
+
+  <h2>Data controller</h2>
+  <dl>
+    <dt>Name</dt>
+    <dd>{site.name}</dd>
+    <dt>Email</dt>
+    <dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+    <dt>Website</dt>
+    <dd>https://kiroland.hu</dd>
+  </dl>
+
+  <h2>Contact form</h2>
+  <p>
+    If you send a message through the form, the details arrive to me by email. Nobody else has
+    access to them, and they are not stored in any database.
+  </p>
+  <dl>
+    <dt>Data processed</dt>
+    <dd>name, email address, the text of your message, the time of sending</dd>
+    <dt>Purpose</dt>
+    <dd>replying to your enquiry and keeping in touch</dd>
+    <dt>Legal basis</dt>
+    <dd>your consent (GDPR Article 6(1)(a)), given via the checkbox on the form</dd>
+    <dt>Retention</dt>
+    <dd>at most 2 years, or until you withdraw your consent</dd>
+  </dl>
+  <p>
+    Giving consent is voluntary, but without it I cannot accept your message. You may withdraw it at
+    any time: write to the address above and I will delete your enquiry from my mailbox.
+  </p>
+
+  <h2>Spam protection — Google reCAPTCHA</h2>
+  <p>
+    The form is protected against automated submissions by Google reCAPTCHA v3. The service
+    <strong>only starts</strong> when you begin using the form — if you are merely browsing the
+    site, no data reaches Google.
+  </p>
+  <p>
+    Once started, Google receives the data needed to operate the system, including your IP address,
+    browser information and interactions on the page, and it also uses data stored on its own
+    domain. Processing may take place in the United States. Details are in Google's
+    <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">privacy policy</a>
+    and <a href="https://policies.google.com/terms" target="_blank" rel="noopener">terms of service</a>.
+  </p>
+
+  <h2>Cookies</h2>
+  <p>
+    The site <strong>uses no cookies</strong> and stores nothing in your browser. There is no
+    analytics, advertising or social media tracking. Cookies may only be set by the reCAPTCHA
+    described above, and only if you use the form.
+  </p>
+
+  <h2>Hosting and server logs</h2>
+  <p>
+    The site is hosted by <strong>Nethely Kft.</strong> (Hungary). For operational and security
+    reasons the provider logs requests, which may include visitors' IP addresses. I access these
+    logs in line with the provider's policy and do not combine them with any other data.
+  </p>
+
+  <h2>Processors and recipients</h2>
+  <ul>
+    <li><strong>Nethely Kft.</strong> — hosting and email delivery</li>
+    <li><strong>Google Ireland Limited</strong> — operating the reCAPTCHA service</li>
+  </ul>
+  <p>Your data is not shared with anyone else and is never used for marketing.</p>
+
+  <h2>Your rights</h2>
+  <ul>
+    <li>request information about the data I hold about you</li>
+    <li>request the correction of inaccurate data</li>
+    <li>request erasure or restriction of processing</li>
+    <li>object to the processing</li>
+    <li>request your data in a portable format</li>
+    <li>withdraw your consent at any time</li>
+  </ul>
+  <p>
+    A single email to <a href={`mailto:${site.email}`}>{site.email}</a> is enough for any of these.
+    I will reply within 30 days at the latest.
+  </p>
+
+  <h2>Remedies</h2>
+  <p>
+    If you believe your rights have been infringed, you may lodge a complaint with the Hungarian
+    National Authority for Data Protection and Freedom of Information (NAIH, 1055 Budapest, Falk
+    Miksa utca 9–11., <a href="https://naih.hu" target="_blank" rel="noopener">naih.hu</a>), or turn
+    to the courts.
+  </p>
+
+  <h2>Changes to this notice</h2>
+  <p>
+    If the way the site works changes, I will update this notice. The date of the latest change is
+    shown at the top of the page.
+  </p>
+</LegalLayout>

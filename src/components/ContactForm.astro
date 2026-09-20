@@ -61,6 +61,22 @@ const recaptchaKey = RECAPTCHA_SITE_KEY;
       ></textarea>
     </label>
 
+    <label class="flex items-start gap-2.5 text-[0.76rem] leading-relaxed font-light text-mu">
+      <input
+        type="checkbox"
+        name="privacy"
+        required
+        class="mt-0.5 size-4 shrink-0 accent-accent"
+      />
+      <span>
+        {t('contact.form.privacy')}{' '}
+        <a
+          href={t('privacy.path')}
+          class="border-b border-line2 text-tx transition-colors hover:border-accent hover:text-accent"
+        >{t('contact.form.privacyLink')}</a>.
+      </span>
+    </label>
+
     <div class="flex flex-wrap items-center gap-3">
       <button
         type="submit"

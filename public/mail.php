@@ -108,6 +108,11 @@ $email   = trim((string) ($_POST['email'] ?? ''));
 $message = trim((string) ($_POST['message'] ?? ''));
 $lang    = ($_POST['lang'] ?? 'hu') === 'en' ? 'en' : 'hu';
 
+// Az adatkezelési tájékoztató elfogadása nélkül nem küldünk levelet
+if (empty($_POST['privacy'] ?? '')) {
+    respond(422, $lang === 'en' ? 'Please accept the privacy notice.' : 'Kerlek, fogadd el az adatkezelesi tajekoztatot.');
+}
+
 if ($name === '' || $message === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     respond(422, $lang === 'en' ? 'Please fill in every field correctly.' : 'Kerlek, tolts ki minden mezot helyesen.');
 }
@@ -154,7 +159,6 @@ $safeEmail = preg_replace('/[\r\n]+/', '', $email);
 $body = "Nev: {$safeName}\n"
       . "E-mail: {$safeEmail}\n"
       . 'Nyelv: ' . $lang . "\n"
-      . 'IP: ' . ($_SERVER['REMOTE_ADDR'] ?? '-') . "\n"
       . 'Ido: ' . date('Y-m-d H:i:s') . "\n\n"
       . $message;
 

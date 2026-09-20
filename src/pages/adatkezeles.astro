@@ -1,0 +1,112 @@
+---
+import LegalLayout from '../components/LegalLayout.astro';
+import { site } from '../data/site';
+
+const alternates = { hu: '/adatkezeles/', en: '/en/privacy/' };
+---
+
+<LegalLayout
+  lang="hu"
+  title="Adatkezelési tájékoztató"
+  updated="Hatályos: 2026. szeptember 20."
+  alternates={alternates}
+>
+  <p>
+    Ez a tájékoztató arról szól, hogy a <strong>kiroland.hu</strong> oldal milyen személyes adatokat
+    kezel, milyen célból, és milyen jogaid vannak ezzel kapcsolatban. Az oldal egy személyes
+    portfólió: nem árul semmit, nem kér regisztrációt, és nem készít profilt a látogatókról.
+  </p>
+
+  <h2>Az adatkezelő</h2>
+  <dl>
+    <dt>Név</dt>
+    <dd>{site.name}</dd>
+    <dt>E-mail</dt>
+    <dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+    <dt>Weboldal</dt>
+    <dd>https://kiroland.hu</dd>
+  </dl>
+
+  <h2>Kapcsolatfelvételi űrlap</h2>
+  <p>
+    Ha üzenetet küldesz az űrlapon, a megadott adatok e-mailben érkeznek meg hozzám. Más nem fér
+    hozzájuk, és semmilyen adatbázisba nem kerülnek be.
+  </p>
+  <dl>
+    <dt>Kezelt adatok</dt>
+    <dd>név, e-mail-cím, az üzenet szövege, a küldés időpontja</dd>
+    <dt>Cél</dt>
+    <dd>a megkeresésedre való válaszadás, kapcsolattartás</dd>
+    <dt>Jogalap</dt>
+    <dd>a hozzájárulásod (GDPR 6. cikk (1) a) pont), amit az űrlap jelölőnégyzetével adsz meg</dd>
+    <dt>Megőrzési idő</dt>
+    <dd>legfeljebb 2 év, vagy amíg a hozzájárulásodat vissza nem vonod</dd>
+  </dl>
+  <p>
+    A hozzájárulás megadása önkéntes, de enélkül nem tudom fogadni az üzenetet. Bármikor
+    visszavonhatod: írj a fenti e-mail-címre, és törlöm a levelezésemből a megkeresésedet.
+  </p>
+
+  <h2>Spamvédelem — Google reCAPTCHA</h2>
+  <p>
+    Az űrlapot a Google reCAPTCHA v3 védi az automatikus, gépi beküldésektől. A szolgáltatás
+    <strong>csak akkor indul el</strong>, amikor elkezded használni az űrlapot — ha csak böngészed
+    az oldalt, semmilyen adat nem jut el a Google-höz.
+  </p>
+  <p>
+    Elindulás után a Google a rendszer működéséhez szükséges adatokat kap, többek között az
+    IP-címedet, a böngésző adatait és az oldalon végzett mozdulatokat, és ehhez a saját domainjén
+    tárolt adatot is használ. Az adatkezelés az Egyesült Államokban is történhet. A részletek a
+    Google <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">adatvédelmi
+    irányelveiben</a> és <a href="https://policies.google.com/terms" target="_blank" rel="noopener">felhasználási
+    feltételeiben</a> olvashatók.
+  </p>
+
+  <h2>Sütik</h2>
+  <p>
+    Az oldal <strong>nem használ sütiket</strong>, és nem tárol adatot a böngésződben. Nincs rajta
+    látogatottság-mérés, hirdetési vagy közösségi médiás követőkód sem. Sütit kizárólag a fent
+    említett reCAPTCHA helyezhet el, és csak akkor, ha az űrlapot használod.
+  </p>
+
+  <h2>Tárhelyszolgáltató és szervernaplók</h2>
+  <p>
+    Az oldalt a <strong>Nethely Kft.</strong> tárhelyén üzemeltetem. A szolgáltató a működés és a
+    biztonság érdekében naplózza a kéréseket, ami tartalmazhatja a látogatók IP-címét. Ezekhez a
+    naplókhoz a szolgáltató szabályzata szerint férek hozzá, és nem kapcsolom össze más adattal.
+  </p>
+
+  <h2>Adatfeldolgozók, címzettek</h2>
+  <ul>
+    <li><strong>Nethely Kft.</strong> — tárhelyszolgáltatás és e-mail-továbbítás</li>
+    <li><strong>Google Ireland Limited</strong> — a reCAPTCHA szolgáltatás üzemeltetése</li>
+  </ul>
+  <p>Az adataidat ezen kívül senkinek nem adom át, és nem használom marketing célra.</p>
+
+  <h2>A te jogaid</h2>
+  <ul>
+    <li>tájékoztatást kérhetsz arról, hogy milyen adatodat kezelem</li>
+    <li>kérheted a pontatlan adat helyesbítését</li>
+    <li>kérheted az adataid törlését vagy a kezelés korlátozását</li>
+    <li>tiltakozhatsz az adatkezelés ellen</li>
+    <li>kérheted az adataid hordozható formában való kiadását</li>
+    <li>a hozzájárulásodat bármikor visszavonhatod</li>
+  </ul>
+  <p>
+    Bármelyikhez elég egy levél a <a href={`mailto:${site.email}`}>{site.email}</a> címre. A
+    kérésedre legkésőbb 30 napon belül válaszolok.
+  </p>
+
+  <h2>Jogorvoslat</h2>
+  <p>
+    Ha úgy érzed, hogy az adatkezelés során sérültek a jogaid, panaszt tehetsz a Nemzeti
+    Adatvédelmi és Információszabadság Hatóságnál (NAIH, 1055 Budapest, Falk Miksa utca 9–11.,
+    <a href="https://naih.hu" target="_blank" rel="noopener">naih.hu</a>), vagy bírósághoz fordulhatsz.
+  </p>
+
+  <h2>A tájékoztató módosítása</h2>
+  <p>
+    Ha az oldal működése változik, ezt a tájékoztatót frissítem. A legutóbbi módosítás dátuma az
+    oldal tetején látható.
+  </p>
+</LegalLayout>
