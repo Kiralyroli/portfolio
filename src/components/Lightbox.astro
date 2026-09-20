@@ -113,10 +113,14 @@ const t = useTranslations(lang);
       source = trigger.closest<HTMLElement>('[data-carousel]');
       if (!source) return;
 
-      images = [...source.querySelectorAll<HTMLImageElement>('[data-lb-open] img')].map((el) => ({
-        src: el.currentSrc || el.src,
-        alt: el.alt,
-      }));
+      // data-full: az eredeti, teljes méretű fájl (a kártyán kicsinyített változat van)
+      images = [...source.querySelectorAll<HTMLElement>('[data-lb-open]')].map((button) => {
+        const img = button.querySelector('img');
+        return {
+          src: button.dataset.full || img?.currentSrc || img?.src || '',
+          alt: img?.alt ?? '',
+        };
+      });
       index = Number(trigger.dataset.index ?? 0);
       title.textContent = source.getAttribute('aria-label') ?? '';
       render();

@@ -11,16 +11,17 @@ interface Props {
   tech: string[];
   repo?: string;
   demo?: string;
-  images: string[];
+  images: ImageMetadata[];
+  priority?: boolean;
 }
 
-const { lang, title, summary, year, tech, repo, demo, images } = Astro.props;
+const { lang, title, summary, year, tech, repo, demo, images, priority = false } = Astro.props;
 const t = useTranslations(lang);
 ---
 
 <article class="flex flex-col border border-line bg-surface/85 transition-colors hover:border-line2">
   {images.length > 0 ? (
-    <ImageCarousel lang={lang} title={title} images={images} />
+    <ImageCarousel lang={lang} title={title} images={images} priority={priority} />
   ) : (
     <div
       class="flex aspect-video w-full items-center justify-center border-b border-line

@@ -42,15 +42,17 @@ year: 2025
 tech: ["C#", ".NET 8"]
 repo: "https://github.com/felhasznalonev/repo"
 demo: "https://demo.pelda.hu"        # elhagyható
-images:                               # elhagyható; képek a public/images/projects/ alá
-  - "/images/projects/kep-1.png"       # az első a borítókép
-  - "/images/projects/kep-2.png"       # több kép esetén a kártyán lapozható
+images:                                      # elhagyható; képek a src/assets/projects/ alá
+  - "../../assets/projects/kep-1.webp"       # az első a borítókép
+  - "../../assets/projects/kep-2.webp"       # több kép esetén a kártyán lapozható
 featured: true                        # false = nem jelenik meg a főoldalon
 order: 1                              # kisebb szám = előrébb
 ---
 ```
 
-A képek ideális mérete 1280×720 (16:9).
+A képeket az Astro dolgozza fel: automatikusan több méretben (360, 640, 960 px)
+elkészülnek, és a böngésző a kijelzőhöz illőt tölti le. Ezért nyugodtan tehetsz be
+nagy felbontású képet. Ideális a 16:9-es arány, de álló kép is jó.
 
 ## Hiányzó fájlok
 

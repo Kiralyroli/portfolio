@@ -62,7 +62,7 @@ const projects = (await getCollection('projects', ({ data }) => data.featured)).
 
       <Section id="munkak" label={t('nav.work')}>
         <div class="grid gap-3 md:grid-cols-2">
-          {projects.map((project) => (
+          {projects.map((project, index) => (
             <ProjectCard
               lang={lang}
               title={project.data.title[lang]}
@@ -72,6 +72,7 @@ const projects = (await getCollection('projects', ({ data }) => data.featured)).
               repo={project.data.repo}
               demo={project.data.demo}
               images={project.data.images}
+              priority={index === 0}
             />
           ))}
         </div>

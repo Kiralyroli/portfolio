@@ -10,8 +10,8 @@ tech: ["TypeScript", "Three.js", "Rapier", "Node.js", "WebSocket", "Docker"]
 repo: "https://github.com/Kiralyroli/car-combat-arena"
 demo: "https://car-combat-arena.kiroland.hu/"
 images:
-  - "/images/projects/car-combat-arena-1.webp"
-  - "/images/projects/car-combat-arena-2.webp"
+  - "../../assets/projects/car-combat-arena-1.webp"
+  - "../../assets/projects/car-combat-arena-2.webp"
 featured: true
 order: 3
 ---

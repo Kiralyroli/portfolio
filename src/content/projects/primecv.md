@@ -9,9 +9,9 @@ year: 2024
 tech: ["PHP", "Symfony 7", "Doctrine", "Twig", "EasyAdmin", "Barion", "SCSS"]
 repo: "https://github.com/Kiralyroli/karrier"
 images:
-  - "/images/projects/primecv-1.webp"
-  - "/images/projects/primecv-2.webp"
-  - "/images/projects/primecv-3.webp"
+  - "../../assets/projects/primecv-1.webp"
+  - "../../assets/projects/primecv-2.webp"
+  - "../../assets/projects/primecv-3.webp"
 featured: true
 order: 1
 ---

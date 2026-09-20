@@ -10,9 +10,9 @@ tech: ["JavaScript", "Three.js", "planck.js", "Colyseus", "Express", "Vite", "Do
 repo: "https://github.com/Kiralyroli/autos-jatek"
 demo: "https://racing-king.kiroland.hu/"
 images:
-  - "/images/projects/racing-king-1.webp"
-  - "/images/projects/racing-king-mobil.webp"
-  - "/images/projects/racing-king-2.webp"
+  - "../../assets/projects/racing-king-1.webp"
+  - "../../assets/projects/racing-king-mobil.webp"
+  - "../../assets/projects/racing-king-2.webp"
 featured: true
 order: 2
 ---

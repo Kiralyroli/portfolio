@@ -9,9 +9,9 @@ year: 2026
 tech: ["Kotlin", "Jetpack Compose", "Android", "TextToSpeech"]
 repo: "https://github.com/Kiralyroli/darts"
 images:
-  - "/images/projects/darts-1.webp"
-  - "/images/projects/darts-2.webp"
-  - "/images/projects/darts-3.webp"
+  - "../../assets/projects/darts-1.webp"
+  - "../../assets/projects/darts-2.webp"
+  - "../../assets/projects/darts-3.webp"
 featured: true
 order: 4
 ---

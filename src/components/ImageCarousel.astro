@@ -1,16 +1,22 @@
 ---
+import { Image } from 'astro:assets';
 import type { Lang } from '../data/site';
 import { useTranslations } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
   title: string;
-  images: string[];
+  images: ImageMetadata[];
+  /** A hajtás fölötti első kártya képe töltődjön azonnal, a többi csak ha kell. */
+  priority?: boolean;
 }
 
-const { lang, title, images } = Astro.props;
+const { lang, title, images, priority = false } = Astro.props;
 const t = useTranslations(lang);
 const count = images.length;
+
+// A kártya nagyjából a tartalomsáv fele, mobilon a teljes szélesség
+const sizes = '(min-width: 1024px) 34vw, (min-width: 768px) 46vw, 92vw';
 ---
 
 <div
@@ -33,12 +39,15 @@ const count = images.length;
         aria-roledescription="slide"
         aria-label={`${i + 1} / ${count}`}
       >
-        <!-- Elmosott háttér ugyanabból a képből, hogy az álló képek mellett se maradjon üres sáv -->
-        <img
+        <!-- Elmosott háttér ugyanabból a képből, hogy az álló képek mellett se maradjon üres sáv.
+             Mivel homályos, elég belőle egy pici változat. -->
+        <Image
           src={src}
           alt=""
           aria-hidden="true"
-          loading={i === 0 ? 'eager' : 'lazy'}
+          widths={[48]}
+          sizes="48px"
+          loading="lazy"
           decoding="async"
           class="absolute inset-0 size-full scale-110 object-cover opacity-25 blur-xl"
         />
@@ -46,17 +55,20 @@ const count = images.length;
           type="button"
           data-lb-open
           data-index={i}
+          data-full={src.src}
           aria-label={`${t('gallery.enlarge')}: ${title}${count > 1 ? ` (${i + 1}/${count})` : ''}`}
           class="relative block size-full cursor-zoom-in focus-visible:outline-offset-[-2px]"
         >
-          <img
+          <Image
             src={src}
             alt={
               count > 1
                 ? `${title} — ${t('gallery.screenshot')} ${i + 1}/${count}`
                 : `${title} — ${t('gallery.screenshot')}`
             }
-            loading={i === 0 ? 'eager' : 'lazy'}
+            widths={[360, 640, 960]}
+            sizes={sizes}
+            loading={priority && i === 0 ? 'eager' : 'lazy'}
             decoding="async"
             class="size-full object-contain"
           />
@@ -95,7 +107,7 @@ const count = images.length;
               data-dot={i}
               aria-label={`${t('gallery.goto')} ${i + 1}`}
               aria-current={i === 0 ? 'true' : 'false'}
-              class="group/dot grid size-5 place-items-center"
+              class="group/dot grid size-6 place-items-center"
             >
               <span class="block size-1.5 bg-mu/50 transition-colors group-hover/dot:bg-tx group-aria-[current=true]/dot:bg-accent"></span>
             </button>

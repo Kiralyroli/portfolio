@@ -11,9 +11,6 @@ const t = useTranslations(lang);
 const recaptchaKey = RECAPTCHA_SITE_KEY;
 ---
 
-{recaptchaKey && (
-  <script is:inline async defer src={`https://www.google.com/recaptcha/api.js?render=${recaptchaKey}`}></script>
-)}
 
 <div class="flex flex-col gap-5">
   <div>
@@ -113,6 +110,29 @@ const recaptchaKey = RECAPTCHA_SITE_KEY;
   const status = document.getElementById('contact-status');
   const button = form?.querySelector('button[type="submit"]') as HTMLButtonElement | null;
 
+  // A reCAPTCHA ~400 KB-ot tölt le, ezért csak akkor kérjük le, amikor a látogató
+  // tényleg az űrlappal kezd foglalkozni. Így az oldal betöltését nem lassítja.
+  let recaptchaScript: Promise<void> | null = null;
+
+  const loadRecaptcha = (key: string) => {
+    recaptchaScript ??= new Promise<void>((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = `https://www.google.com/recaptcha/api.js?render=${key}`;
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('recaptcha'));
+      document.head.appendChild(script);
+    });
+    return recaptchaScript;
+  };
+
+  const key = form?.dataset.recaptchaKey;
+  if (form && key) {
+    const start = () => void loadRecaptcha(key).catch(() => {});
+    form.addEventListener('focusin', start, { once: true });
+    form.addEventListener('pointerdown', start, { once: true });
+  }
+
   form?.addEventListener('submit', async (event) => {
     if (!status || !button) return;
     event.preventDefault();
@@ -126,9 +146,9 @@ const recaptchaKey = RECAPTCHA_SITE_KEY;
       const data = new FormData(form);
 
       // reCAPTCHA v3: a token a háttérben készül, a látogatónak nincs teendője
-      const key = form.dataset.recaptchaKey;
-      const grecaptcha = (window as any).grecaptcha;
-      if (key && grecaptcha) {
+      if (key) {
+        await loadRecaptcha(key);
+        const grecaptcha = (window as any).grecaptcha;
         await new Promise<void>((resolve) => grecaptcha.ready(resolve));
         data.append('recaptcha_token', await grecaptcha.execute(key, { action: 'contact' }));
       }

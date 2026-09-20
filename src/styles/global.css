@@ -16,7 +16,7 @@
   --color-grid:   #121A1F;   /* háttérrács vonalai */
   --color-tx:     #E6EDEF;   /* elsődleges szöveg */
   --color-mu:     #8FA0A6;   /* másodlagos szöveg */
-  --color-fa:     #5F6F76;   /* halvány / címke */
+  --color-fa:     #7E8C93;   /* halvány / címke — WCAG AA (5,4:1) a sötét háttereken */
   --color-accent: #E4C98F;   /* akcens (homok) */
   --color-on-accent: #15120A;
 
