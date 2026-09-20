@@ -80,13 +80,30 @@ return ['to' => 'ide-erkeznek@pelda.hu', 'from' => 'letezo-cim@domain.hu'];
 |---|---|---|
 | Secret | `SFTP_HOST`, `SFTP_USER`, `SFTP_PASSWORD` | SFTP-belépés |
 | Secret | `MAIL_TO` | ide érkeznek az űrlap üzenetei |
+| Secret | `RECAPTCHA_SECRET` | reCAPTCHA v3 titkos kulcs (elhagyható) |
 | Variable | `SFTP_PATH` | a célmappa, pl. `/` |
 | Variable | `CONTACT_EMAIL` | az oldalon megjelenő cím és az űrlap feladója |
+| Variable | `RECAPTCHA_SITE_KEY` | reCAPTCHA v3 publikus kulcs (elhagyható) |
 
 A nethelynél a feladónak (`CONTACT_EMAIL`) a tárhelyen létező e-mail-címnek
 vagy aliasnak kell lennie, különben a szerver eldobja a levelet.
 
 HTTPS-t a nethely admin felületén, ingyenes Let's Encrypt tanúsítvánnyal kapcsolj be.
+
+## Spamvédelem
+
+Az űrlapot egy rejtett csapdamező és opcionálisan a **reCAPTCHA v3** védi. A v3
+nem kérdez semmit a látogatótól, csak pontoz a háttérben.
+
+1. Kulcspár igénylése: <https://www.google.com/recaptcha/admin> → *reCAPTCHA v3*,
+   domainként `kiroland.hu` (fejlesztéshez `localhost` is felvehető).
+2. A publikus kulcs a `RECAPTCHA_SITE_KEY`, a titkos a `RECAPTCHA_SECRET`.
+3. Kulcsok nélkül az űrlap ugyanúgy működik, csak captcha-ellenőrzés nélkül.
+
+A `mail.php` akkor fogadja el a beküldést, ha a Google válasza sikeres, az
+action `contact`, és a pontszám eléri a `recaptcha_min_score` értéket (0.5).
+Ha a Google nem érhető el, az üzenet átmegy — jobb egy kihagyott ellenőrzés,
+mint egy elveszett megkeresés. Ez a naplóba bekerül.
 
 ## Megjegyzések
 

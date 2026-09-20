@@ -23,6 +23,8 @@ export default defineConfig({
   env: {
     schema: {
       CONTACT_EMAIL: envField.string({ context: 'server', access: 'public' }),
+      // reCAPTCHA v3 publikus kulcs. Ha nincs megadva, az űrlap captcha nélkül megy.
+      RECAPTCHA_SITE_KEY: envField.string({ context: 'server', access: 'public', optional: true }),
     },
   },
 

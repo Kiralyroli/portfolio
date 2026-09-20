@@ -1,11 +1,19 @@
 ---
+import { RECAPTCHA_SITE_KEY } from 'astro:env/server';
 import { site, type Lang } from '../data/site';
 import { useTranslations } from '../i18n/ui';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+
+// Ha nincs kulcs beállítva, a captcha kimarad, az űrlap enélkül is működik.
+const recaptchaKey = RECAPTCHA_SITE_KEY;
 ---
+
+{recaptchaKey && (
+  <script is:inline async defer src={`https://www.google.com/recaptcha/api.js?render=${recaptchaKey}`}></script>
+)}
 
 <div class="flex flex-col gap-5">
   <div>
@@ -22,6 +30,7 @@ const t = useTranslations(lang);
     id="contact-form"
     method="post"
     action="/mail.php"
+    data-recaptcha-key={recaptchaKey}
     class="flex flex-col gap-3 border border-line bg-surface/85 p-4"
   >
     <input type="hidden" name="lang" value={lang} />
@@ -72,6 +81,29 @@ const t = useTranslations(lang);
         data-error={t('contact.form.error')}
       ></p>
     </div>
+
+    {recaptchaKey && (
+      <>
+        <noscript>
+          <p class="text-[0.72rem] text-mu">{t('contact.form.nojs')}</p>
+        </noscript>
+        <p class="text-[0.68rem] leading-relaxed text-fa">
+          {t('recaptcha.notice')}{' '}
+          <a
+            href="https://policies.google.com/privacy"
+            target="_blank"
+            rel="noopener"
+            class="border-b border-line2 transition-colors hover:text-mu"
+          >{t('recaptcha.privacy')}</a>{' · '}
+          <a
+            href="https://policies.google.com/terms"
+            target="_blank"
+            rel="noopener"
+            class="border-b border-line2 transition-colors hover:text-mu"
+          >{t('recaptcha.terms')}</a>
+        </p>
+      </>
+    )}
   </form>
 </div>
 
@@ -91,9 +123,19 @@ const t = useTranslations(lang);
     status.classList.remove('text-accent');
 
     try {
+      const data = new FormData(form);
+
+      // reCAPTCHA v3: a token a háttérben készül, a látogatónak nincs teendője
+      const key = form.dataset.recaptchaKey;
+      const grecaptcha = (window as any).grecaptcha;
+      if (key && grecaptcha) {
+        await new Promise<void>((resolve) => grecaptcha.ready(resolve));
+        data.append('recaptcha_token', await grecaptcha.execute(key, { action: 'contact' }));
+      }
+
       const response = await fetch(form.action, {
         method: 'POST',
-        body: new FormData(form),
+        body: data,
         headers: { Accept: 'application/json' },
       });
       if (!response.ok) throw new Error(String(response.status));

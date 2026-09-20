@@ -4,12 +4,14 @@
 #   SFTP_HOST      ftp.nethely.hu
 #   SFTP_USER      a tárhely FTP-felhasználóneve
 #   SFTP_PASSWORD  a hozzá tartozó jelszó
-#   MAIL_TO        ide érkeznek a kapcsolati űrlap üzenetei
+#   MAIL_TO            ide érkeznek a kapcsolati űrlap üzenetei
+#   RECAPTCHA_SECRET   a reCAPTCHA v3 titkos kulcsa (elhagyható: ekkor nincs captcha)
 #
 # Változók (Variables fül) — ezek nem titkok, a naplóban olvashatók maradnak:
 #   SFTP_PATH      a célmappa, pl. / vagy /web
 #   CONTACT_EMAIL  az oldalon megjelenő cím, és az űrlap levelének feladója
 #                  (a nethelyen létező címnek vagy aliasnak kell lennie)
+#   RECAPTCHA_SITE_KEY  a reCAPTCHA v3 publikus kulcsa (a titkos kulcs párja)
 #
 # Egyelőre kézzel indul: Actions fül → Deploy → Run workflow.
 # Ha a titkok be vannak állítva és a deploy működik, vedd ki a # jeleket
@@ -38,6 +40,7 @@ jobs:
       - run: npm run build
         env:
           CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
+          RECAPTCHA_SITE_KEY: ${{ vars.RECAPTCHA_SITE_KEY }}
 
       # A mail.php címeit egy mellé generált PHP-fájl adja, így nincsenek a repóban.
       # (PHP-fájlként a böngészőből megnyitva sem ad ki semmit.)
@@ -45,6 +48,7 @@ jobs:
         env:
           MAIL_TO: ${{ secrets.MAIL_TO }}
           MAIL_FROM: ${{ vars.CONTACT_EMAIL }}
+          RECAPTCHA_SECRET: ${{ secrets.RECAPTCHA_SECRET }}
         run: |
           for name in MAIL_TO MAIL_FROM; do
             value="${!name}"
@@ -53,8 +57,18 @@ jobs:
               exit 1
             fi
           done
-          printf "<?php\n// A deploy generálja a GitHub-beállításokból, ne szerkeszd kézzel.\nreturn ['to' => '%s', 'from' => '%s'];\n" \
-            "$MAIL_TO" "$MAIL_FROM" > dist/mail-config.php
+
+          # A captcha elhagyható, de ha meg van adva, érvényes alakú kulcs legyen
+          if [[ -n "$RECAPTCHA_SECRET" && ! "$RECAPTCHA_SECRET" =~ ^[A-Za-z0-9_-]{20,100}$ ]]; then
+            echo "::error::A RECAPTCHA_SECRET nem érvényes alakú kulcs"
+            exit 1
+          fi
+          if [[ -z "$RECAPTCHA_SECRET" ]]; then
+            echo "::warning::Nincs RECAPTCHA_SECRET, az űrlap captcha-ellenőrzés nélkül megy ki"
+          fi
+
+          printf "<?php\n// A deploy generálja a GitHub-beállításokból, ne szerkeszd kézzel.\nreturn ['to' => '%s', 'from' => '%s', 'recaptcha_secret' => '%s', 'recaptcha_min_score' => 0.5];\n" \
+            "$MAIL_TO" "$MAIL_FROM" "$RECAPTCHA_SECRET" > dist/mail-config.php
 
       # A nethely csak SFTP-t enged (SSH-parancsot nem), ezért lftp tükrözi fel a dist/ mappát:
       # az almappákat is létrehozza, a tárhelyen lévő egyéb fájlokat nem törli.

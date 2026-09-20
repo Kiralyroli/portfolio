@@ -50,6 +50,12 @@
   }
 }
 
+/* A reCAPTCHA lebegő jelvénye helyett az űrlap alatti szöveg tájékoztat,
+   ahogy a Google feltételei engedik. */
+.grecaptcha-badge {
+  visibility: hidden;
+}
+
 @utility grid-lines {
   /* Hat egyenlő oszlopot rajzol a tartalom mögé */
   background-image: linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
