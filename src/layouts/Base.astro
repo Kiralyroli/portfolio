@@ -25,7 +25,7 @@ const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: site.name,
-  jobTitle: site.role[lang],
+  jobTitle: [site.role[lang], ...site.roleAliases[lang]],
   description: site.about[lang][0],
   url: canonical.href,
   image: ogImage,

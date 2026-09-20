@@ -18,22 +18,28 @@ export const site = {
     en: 'Full Stack Developer',
   },
 
+  /** Rokon pozíciómegnevezések — csak a strukturált adatba kerülnek (JSON-LD jobTitle). */
+  roleAliases: {
+    hu: ['Webfejlesztő', 'Szoftverfejlesztő', 'Programozó', 'PHP fejlesztő'],
+    en: ['Web Developer', 'Software Developer', 'Programmer', 'PHP Developer'],
+  },
+
   // Egy mondat az oldalsávba
   tagline: {
-    hu: 'Webshopokat, integrációkat és a mögöttük futó rendszereket építek — PHP-tól a Node.js-ig.',
-    en: 'I build webshops, integrations and the systems behind them — from PHP to Node.js.',
+    hu: 'Webfejlesztő és programozó: webshopok, ERP- és API-integrációk, és a mögöttük futó rendszerek — PHP-tól a Node.js-ig.',
+    en: 'Web developer and programmer: webshops, ERP and API integrations, and the systems behind them — from PHP to Node.js.',
   },
 
   // A "Bemutatkozás" szekció bekezdései
   about: {
     hu: [
-      '2019 óta dolgozom full stack fejlesztőként. Webshopokat építek, és összekötöm őket azokkal a rendszerekkel, amikre egy online vállalkozás épül: ERP-kkel, beszállítói rendszerekkel, számlázókkal, marketingeszközökkel. Integrációs rendszereket is fejlesztek, amelyek kétirányú szinkronnal mozgatják a termék-, készlet- és rendelésadatokat — REST és SOAP API-kon, webhookokon és fájlalapú importokon keresztül. A napi munkám PHP, egyedi rendszerekben és Symfonyn, OpenCart, Shoprenter és UNAS platformokkal.',
-      'A kódon túl a teljes fejlesztési folyamatot is szeretem rendben tartani — CI/CD, szerverautomatizálás, adatmigráció. Fontos nekem a tiszta, objektumorientált kód és az előre átgondolt terv, és hogy a kész megoldás mérhető üzleti értéket adjon.',
+      'Szegeden élek, és 2019 óta dolgozom full stack fejlesztőként. Webshopokat építek és programozok, és összekötöm őket azokkal a rendszerekkel, amikre egy online vállalkozás épül: ERP-kkel, beszállítói rendszerekkel, számlázókkal, marketingeszközökkel. Integrációs rendszereket is fejlesztek, amelyek kétirányú szinkronnal mozgatják a termék-, készlet- és rendelésadatokat — REST és SOAP API-kon, webhookokon és fájlalapú importokon keresztül. A napi munkám PHP, egyedi rendszerekben és Symfonyn, OpenCart, Shoprenter és UNAS platformokkal.',
+      'A kódon túl a teljes szoftverfejlesztési folyamatot is szeretem rendben tartani — CI/CD, szerverautomatizálás, adatmigráció. Fontos nekem a tiszta, objektumorientált kód és az előre átgondolt terv, és hogy a kész megoldás mérhető üzleti értéket adjon.',
       'Napi szinten AI-asszisztált fejlesztéssel dolgozom: az AI-eszközök gyorsítják a prototípus-készítést, a tesztelést és a refaktorálást, így több időm jut a tervezésre és a döntésekre. Közben folyamatosan nyitok új területek felé — Node.js és TypeScript alapú valós idejű alkalmazások, C#, mobilapp- és játékfejlesztés. A saját projektjeim között két böngészőben futó, multiplayer 3D autós játék is van.',
     ],
     en: [
-      'I have been working as a full stack developer since 2019. I build webshops and connect them to the systems an online business runs on: ERPs, supplier systems, invoicing tools and marketing platforms. I also develop integration systems that move product, stock and order data with two-way sync — over REST and SOAP APIs, webhooks and file-based imports. My daily work is PHP, in custom-built systems and on Symfony, with OpenCart, Shoprenter and UNAS.',
-      'Beyond the code, I like keeping the whole development process in shape — CI/CD, server automation, data migration. I care about clean, object-oriented code and a plan thought through in advance, and about the finished solution delivering measurable business value.',
+      'I live in Szeged and have been working as a full stack developer since 2019. I build and program webshops and connect them to the systems an online business runs on: ERPs, supplier systems, invoicing tools and marketing platforms. I also develop integration systems that move product, stock and order data with two-way sync — over REST and SOAP APIs, webhooks and file-based imports. My daily work is PHP, in custom-built systems and on Symfony, with OpenCart, Shoprenter and UNAS.',
+      'Beyond the code, I like keeping the whole software development process in shape — CI/CD, server automation, data migration. I care about clean, object-oriented code and a plan thought through in advance, and about the finished solution delivering measurable business value.',
       'I work with AI-assisted development every day: AI tools speed up prototyping, testing and refactoring, which leaves me more time for design and decisions. Meanwhile I keep moving into new areas — real-time applications with Node.js and TypeScript, C#, mobile and game development. My own projects include two multiplayer 3D car games that run in the browser.',
     ],
   },
